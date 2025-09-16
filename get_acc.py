@@ -33,8 +33,11 @@ class Riot_Acc:
         self.tagLine = mp["tagLine"]
         self.champList = []
     
-    def get_info(self):
+    def print_info(self):
         print(f"puuid: {self.puuid}\nusername: {self.gameName}#{self.tagLine}")
+    
+    def get_puuid(self):
+        return self.puuid
     
     def get_champ_mastery(self):
         # https://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json
@@ -50,3 +53,18 @@ class Riot_Acc:
     
         for champ in self.champList:
             champ.print_info()
+    
+    def get_matches(self):
+        url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{self.puuid}/ids"
+        headers = {
+            "X-Riot-Token": api_key
+        }
+        response = requests.get(url, headers=headers)
+        return json.loads(response.text)
+
+user = input("please input your user: ")
+tag = input("please input your tag: ")
+
+temp = Riot_Acc(api_key, user, tag)
+print(temp.get_puuid())
+temp.get_matches()
