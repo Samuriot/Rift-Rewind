@@ -2,7 +2,8 @@ import requests
 import json
 
 class Champion:
-    def __init__(self, name, title, blurb, info, tags, partype, stats):
+    def __init__(self, id, name, title, blurb, info, tags, partype, stats):
+        self.id = id
         self.name = name
         self.title = title
         self.description = blurb
@@ -11,6 +12,7 @@ class Champion:
         self.partype = partype
         self.stats = stats
         self.image_url = f"https://ddragon.leagueoflegends.com/cdn/15.18.1/img/champion/{self.name}.png"
+
     
     def __str__(self):
         return self.name
@@ -22,8 +24,7 @@ def create_champ_list():
     all_champs = {}
 
     for champion, desc in champ_list['data'].items():
-        all_champs[desc["key"]] = Champion(desc["name"], desc["title"], desc["blurb"], desc["info"], desc["tags"], desc["partype"], desc["stats"])
-
-    for key, val in all_champs.items():
-        print(f"{key}: {val} - {val.title}")
+        all_champs[desc["key"]] = Champion(desc["key"], desc["name"], desc["title"], desc["blurb"], desc["info"], desc["tags"], desc["partype"], desc["stats"])
+    
+    return all_champs
 

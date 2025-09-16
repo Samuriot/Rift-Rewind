@@ -2,17 +2,22 @@ from dotenv import load_dotenv
 import requests
 import json
 import os
+import champion
 
 load_dotenv()
 api_key = os.getenv("RIOT_API")
+master_champ_list = champion.create_champ_list()
 
 class Champ_Mastery:
     def __init__(self, response: dict):
         self.json_info = response
+        self.champ_info = master_champ_list[str(response["championId"])]
     
-    def print(self):
-        for key in self.json_info:
-            print(f"{key}: {self.json_info[key]}")
+    def print_info(self):
+        master = self.json_info["championLevel"]
+        print(f"{self.champ_info.name}: {self.champ_info.title} - {master}")
+        # for key in self.json_info:
+        #     print(f"{key}: {self.json_info[key]}")
 
 class Riot_Acc:
     def __init__(self, api_key, user, tag):
@@ -42,6 +47,6 @@ class Riot_Acc:
         
         for key in mp:
             self.champList.append(Champ_Mastery(key))
-        
+    
         for champ in self.champList:
-            print(champ.print())
+            champ.print_info()
