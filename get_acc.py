@@ -26,6 +26,8 @@ class Riot_Acc:
             "X-Riot-Token": api_key
         }
         response = requests.get(acc_url, headers=headers)
+        if(response.status_code != 200):
+            raise Exception(f"API Error: {response.status_code}")
         mp = json.loads(response.text) 
         self.api_key = api_key
         self.puuid = mp["puuid"]
