@@ -2,8 +2,8 @@ from dotenv import load_dotenv
 import requests
 import json
 import os
-import champion
-import match_game as m
+import functions.champion as champion
+import functions.match_game as m
 
 load_dotenv()
 api_key = os.getenv("RIOT_API")
@@ -68,12 +68,3 @@ class Riot_Acc:
         if(response.status_code != 200):
             raise Exception(f"API Error in get_matches(): {response.status_code}")
         return json.loads(response.text)
-
-user = input("please input your user: ")
-tag = input("please input your tag: ")
-
-temp = Riot_Acc(api_key, user, tag)
-print(temp.get_puuid())
-matches = temp.get_matches()
-match_test = m.Match_Game(api_key, matches[0])
-match_test.print_details()
