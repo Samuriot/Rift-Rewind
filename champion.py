@@ -20,6 +20,8 @@ class Champion:
 def create_champ_list():
     url = "https://ddragon.leagueoflegends.com/cdn/15.18.1/data/en_US/champion.json"
     champ_list = requests.get(url)
+    if(champ_list.status_code != 200):
+            raise Exception(f"API Error in create_champ_list: {champ_list.status_code}")
     champ_list = json.loads(champ_list.text)
     all_champs = {}
 

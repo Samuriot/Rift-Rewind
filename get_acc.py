@@ -27,7 +27,7 @@ class Riot_Acc:
         }
         response = requests.get(acc_url, headers=headers)
         if(response.status_code != 200):
-            raise Exception(f"API Error: {response.status_code}")
+            raise Exception(f"API Error in Riot_Acc Constructor: {response.status_code}")
         mp = json.loads(response.text) 
         self.api_key = api_key
         self.puuid = mp["puuid"]
@@ -48,6 +48,8 @@ class Riot_Acc:
             "X-Riot-Token": api_key
         }
         response = requests.get(url, headers=headers)
+        if(response.status_code != 200):
+            raise Exception(f"API Error in get_champ_mastery(): {response.status_code}")
         mp = json.loads(response.text)
         
         for key in mp:
@@ -62,6 +64,8 @@ class Riot_Acc:
             "X-Riot-Token": api_key
         }
         response = requests.get(url, headers=headers)
+        if(response.status_code != 200):
+            raise Exception(f"API Error in get_matches(): {response.status_code}")
         return json.loads(response.text)
 
 user = input("please input your user: ")
