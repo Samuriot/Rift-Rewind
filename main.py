@@ -13,7 +13,6 @@ if __name__ == "__main__":
     tag = input("please input your tag: ")
 
     temp = r.Riot_Acc(api_key, user, tag)
-    print(temp.get_puuid())
     matches = temp.get_matches()
     match_test = m.Match_Game(api_key, matches[0])
-    match_test.print_details()
+    match_test.load_players()

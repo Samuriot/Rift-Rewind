@@ -5,8 +5,6 @@ import os
 import functions.champion as champion
 import functions.match_game as m
 
-load_dotenv()
-api_key = os.getenv("RIOT_API")
 master_champ_list = champion.create_champ_list()
 
 class Champ_Mastery:
@@ -22,9 +20,10 @@ class Champ_Mastery:
 
 class Riot_Acc:
     def __init__(self, api_key, user, tag):
+        self.api_key = api_key
         acc_url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user}/{tag}"
         headers = {
-            "X-Riot-Token": api_key
+            "X-Riot-Token": self.api_key
         }
         response = requests.get(acc_url, headers=headers)
         if(response.status_code != 200):
@@ -46,7 +45,7 @@ class Riot_Acc:
         # https://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json
         url = f"https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{self.puuid}"
         headers = {
-            "X-Riot-Token": api_key
+            "X-Riot-Token": self.api_key
         }
         response = requests.get(url, headers=headers)
         if(response.status_code != 200):
@@ -62,7 +61,7 @@ class Riot_Acc:
     def get_matches(self) -> list:
         url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{self.puuid}/ids"
         headers = {
-            "X-Riot-Token": api_key
+            "X-Riot-Token": self.api_key
         }
         response = requests.get(url, headers=headers)
         if(response.status_code != 200):
