@@ -10,11 +10,18 @@ class Player:
         self.json_file = dump
         self.role = role
         
-    def set_json_stats(self, json_file):
-        self.json_file = json_file
+    def load_stats(self):
+        self.kills = self.json_file["kills"]
+        self.deaths = self.json_file["deaths"]
+        self.assists = self.json_file["assists"]
+        self.kda = round((self.kills + self.assists) / self.deaths, 3)
+        self.gold = self.json_file["goldEarned"]
     
     def __str__(self):
         return self.user
+    
+    def get_KDA(self):
+        return f"{self.kills}/{self.deaths}/{self.assists} - {self.kda}"
 
 class Match_Game:
     def __init__(self, api_key, match_id):
@@ -37,9 +44,12 @@ class Match_Game:
         gameData = self.json_resp["info"]["participants"]
         for entry in gameData:
             user = Player(entry["puuid"], entry["riotIdGameName"] + "#" + entry["riotIdTagline"], entry, entry["individualPosition"])
-            print(user.user + ": " + user.role)
+            user.load_stats()
             self.players.append(user)
             
-            
+    def print_basic_stats(self):
+        for user in self.players:
+            print(f"{str(user)}: {user.get_KDA()} - {user.gold} total gold")
+
     def print_details(self):
         print(json.dumps(self.json_resp, indent=4))

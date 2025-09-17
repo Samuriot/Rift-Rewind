@@ -16,3 +16,4 @@ if __name__ == "__main__":
     matches = temp.get_matches()
     match_test = m.Match_Game(api_key, matches[0])
     match_test.load_players()
+    match_test.print_basic_stats()
