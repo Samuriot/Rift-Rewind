@@ -1,8 +1,6 @@
 from functions import champion as c, get_acc as r, match_game as m
 
 from dotenv import load_dotenv
-import requests
-import json
 import os
 
 load_dotenv()
