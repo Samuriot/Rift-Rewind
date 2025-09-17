@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import champion
+import match_game as m
 
 load_dotenv()
 api_key = os.getenv("RIOT_API")
@@ -58,7 +59,7 @@ class Riot_Acc:
         for champ in self.champList:
             champ.print_info()
     
-    def get_matches(self):
+    def get_matches(self) -> list:
         url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{self.puuid}/ids"
         headers = {
             "X-Riot-Token": api_key
@@ -73,4 +74,6 @@ tag = input("please input your tag: ")
 
 temp = Riot_Acc(api_key, user, tag)
 print(temp.get_puuid())
-temp.get_matches()
+matches = temp.get_matches()
+match_test = m.Match_Game(api_key, matches[0])
+match_test.print_details()
