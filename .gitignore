@@ -1,3 +1,5 @@
 .env
 *.txt
 __*
+output
+recent10

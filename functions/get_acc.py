@@ -58,7 +58,7 @@ class Riot_Acc:
         for champ in self.champList:
             champ.print_info()
     
-    def get_matches(self) -> list:
+    def get_matches_ids(self) -> list:
         url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{self.puuid}/ids"
         headers = {
             "X-Riot-Token": self.api_key
@@ -66,4 +66,13 @@ class Riot_Acc:
         response = requests.get(url, headers=headers)
         if(response.status_code != 200):
             raise Exception(f"API Error in get_matches(): {response.status_code}")
+            
         return json.loads(response.text)
+    
+    def parse_matches_ids(self):
+        self.match_history = {}
+        match_ids = self.get_matches_ids()
+        for match_id in match_ids:
+            game = m.Match_Game(self.api_key, match_id)
+            self.match_history[match_id] = game.get_player_stats(self.puuid)
+        return self.match_history

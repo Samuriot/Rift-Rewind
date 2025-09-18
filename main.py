@@ -2,16 +2,17 @@ from functions import champion as c, get_acc as r, match_game as m
 
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv()
 api_key = os.getenv("RIOT_API")
 
 if __name__ == "__main__":
-    user = input("please input your user: ")
-    tag = input("please input your tag: ")
+    user = input()
+    tag = input()
 
     temp = r.Riot_Acc(api_key, user, tag)
-    matches = temp.get_matches()
-    match_test = m.Match_Game(api_key, matches[0])
-    match_test.load_players()
-    match_test.print_basic_stats()
+    temp2 = temp.parse_matches_ids()
+    for key, val in temp2.items():
+        print(f"{key}: {val}")
+    # match_test.print_basic_stats()
