@@ -119,12 +119,23 @@ class Riot_Acc:
                     if content is True:
                         compiled_stats[category] += 1
         
+        # removes player score stats from API
+        for i in range(12):
+            compiled_stats.pop(f"PlayerScore{i}")
+        
+        # removes unnecessary info
         compiled_stats.pop("puuid")
         compiled_stats.pop("riotIdGameName")
         compiled_stats.pop("riotIdTagline")
         compiled_stats.pop("summonerId")
         compiled_stats.pop("summonerName")
         compiled_stats.pop("summonerLevel")
+        compiled_stats.pop("championId")
+        
+        # updates game specific information with averages
+        compiled_stats["champLevel"] = (compiled_stats["champLevel"] / len(self.match_history))
+        compiled_stats["champExperience"] = (compiled_stats["champExperience"] / len(self.match_history))
+        compiled_stats["numGames"] = len(self.match_history)
         
         for key, val in compiled_stats.items():
             print(f"{key}: {val}")
