@@ -25,6 +25,15 @@ class Player_Performance:
     
     def get_KDA(self):
         return f"{self.kills}/{self.deaths}/{self.assists} - {self.kda}"
+    
+    def get_kills(self):
+        return self.kills
+    
+    def get_deaths(self):
+        return self.deaths
+    
+    def get_assists(self):
+        return self.assists
 
 class Match_Game:
     def load_players(self):

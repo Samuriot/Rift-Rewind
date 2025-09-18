@@ -76,3 +76,17 @@ class Riot_Acc:
             game = m.Match_Game(self.api_key, match_id)
             self.match_history[match_id] = game.get_player_stats(self.puuid)
         return self.match_history
+    
+    def get_recent_KDA(self):
+        num_kills = 0
+        num_deaths = 0
+        num_assists = 0
+        for key, val in self.match_history.items():
+            num_kills += val.get_kills()
+            num_deaths += val.get_deaths()
+            num_assists += val.get_assists()
+        
+        kda = (num_kills + num_assists) / num_deaths 
+        
+        print(f"{num_kills}/{num_deaths}/{num_assists} - {kda}")
+        return kda
