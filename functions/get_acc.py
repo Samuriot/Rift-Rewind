@@ -97,6 +97,39 @@ class Riot_Acc:
             self.match_history[match_id] = game.get_player_stats(self.puuid)
         return self.match_history
     
+    def compile_match_stats(self):
+        # create a singular json, which parses every single match in self.match_history
+        # and compiles all the combined stats present
+        compiled_stats = {}
+        for key, val in self.match_history.items():
+            for category, content in val.json_file.items():
+                if type(content) == int:
+                    if category not in compiled_stats:
+                        compiled_stats[category] = 0
+                    compiled_stats[category] += content
+                elif type(content) == str:
+                    if category not in compiled_stats:
+                        compiled_stats[category] = []
+                    compiled_stats[category].append(content)
+                elif type(content) == dict:
+                    pass
+                elif type(content) == bool:
+                    if category not in compiled_stats:
+                        compiled_stats[category] = 0
+                    if content is True:
+                        compiled_stats[category] += 1
+        
+        compiled_stats.pop("puuid")
+        compiled_stats.pop("riotIdGameName")
+        compiled_stats.pop("riotIdTagline")
+        compiled_stats.pop("summonerId")
+        compiled_stats.pop("summonerName")
+        compiled_stats.pop("summonerLevel")
+        
+        for key, val in compiled_stats.items():
+            print(f"{key}: {val}")
+            
+    
     # get_recent_KDA will summarize all kills, deaths, and assists from self.match_history
     # and return a cummulative KDA based on performane
     def get_recent_KDA(self) -> float:

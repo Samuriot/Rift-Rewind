@@ -13,7 +13,9 @@ if __name__ == "__main__":
 
     temp = r.Riot_Acc(api_key, user, tag)
     match_history = temp.parse_matches_ids()
-    for key, val in match_history.items():
-        print(f"{key}: {val}")
-        
+    # print("{")
+    # for key, val in match_history.items():
+    #     print(f"\"{key}\": {val},")
+    # print("}")
+    temp.compile_match_stats()
     # match_test.print_basic_stats()
