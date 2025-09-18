@@ -1,7 +1,12 @@
+# champion.py
+# Defines the Champion class that hosts the information about LoL champions from Riot API
+
 import requests
 import json
 
+# Champion class that contains basic information about a League champ
 class Champion:
+    # __init__ method to construct Champion object based on info from API
     def __init__(self, id, name, title, blurb, info, tags, partype, stats):
         self.id = id
         self.name = name
@@ -13,10 +18,12 @@ class Champion:
         self.stats = stats
         self.image_url = f"https://ddragon.leagueoflegends.com/cdn/15.18.1/img/champion/{self.name}.png"
 
-    
+    # __str__ method to print an object properly
     def __str__(self):
         return self.name
 
+# create_champ_list will perform an API call to the DataDragon LoL API to get all champions
+# will return a dictionary with the champ's ID as a key, and a Champion Object as the value
 def create_champ_list():
     url = "https://ddragon.leagueoflegends.com/cdn/15.18.1/data/en_US/champion.json"
     champ_list = requests.get(url)
