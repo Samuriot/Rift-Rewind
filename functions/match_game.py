@@ -8,6 +8,53 @@ import json
 match_url  = "https://americas.api.riotgames.com/lol/match/v5/matches/"
 from functions.performance import Player_Performance
 
+# Player_Performance class which represents an individual's performance across a game of LoL
+# used by Riot_Acc and Match_Game classes via composition
+class Player_Performance:
+    # __init__ constructor
+    def __init__(self, id, user, dump, role):
+        self.id = id
+        self.user = user
+        self.json_file = dump
+        self.role = self.get_role(role)
+        
+    # load_stats method will parse self.json_file for information from Riot API
+    # TODO: WIP currently, need to add more areas to parse
+    def load_stats(self):
+        self.kills = self.json_file["kills"]
+        self.deaths = self.json_file["deaths"]
+        self.assists = self.json_file["assists"]
+        if self.deaths != 0:
+            self.kda = round((self.kills + self.assists) / self.deaths, 3)
+        else:
+            self.kda = self.kills + self.assists
+        self.gold = self.json_file["goldEarned"]
+    
+    # __str__ getter method
+    def __str__(self):
+        return json.dumps(self.json_file, indent=4)
+    
+    # getter methods for member data
+    def get_KDA(self):
+        return f"{self.kills}/{self.deaths}/{self.assists} - {self.kda}"
+    
+    def get_kills(self):
+        return self.kills
+    
+    def get_deaths(self):
+        return self.deaths
+    
+    def get_assists(self):
+        return self.assists
+    
+    def get_role(self, role):
+        if role.lower() != "invalid":
+            return role
+        else:
+            return "ARAM"
+    
+
+
 # Match_Game Class, which represents an single LoL game, which should host the performance of each player
 # based on an API call to the RIOT API, class will throw an exception will API call fails
 class Match_Game:
