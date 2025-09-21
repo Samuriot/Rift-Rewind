@@ -4,48 +4,9 @@
 
 import requests
 import json
-
 # match_url global variable
 match_url  = "https://americas.api.riotgames.com/lol/match/v5/matches/"
-
-# Player_Performance class which represents an individual's performance across a game of LoL
-# used by Riot_Acc and Match_Game classes via composition
-class Player_Performance:
-    # __init__ constructor
-    def __init__(self, id, user, dump, role):
-        self.id = id
-        self.user = user
-        self.json_file = dump
-        self.role = role
-        
-    # load_stats method will parse self.json_file for information from Riot API
-    # TODO: WIP currently, need to add more areas to parse
-    def load_stats(self):
-        self.kills = self.json_file["kills"]
-        self.deaths = self.json_file["deaths"]
-        self.assists = self.json_file["assists"]
-        if self.deaths != 0:
-            self.kda = round((self.kills + self.assists) / self.deaths, 3)
-        else:
-            self.kda = self.kills + self.assists
-        self.gold = self.json_file["goldEarned"]
-    
-    # __str__ getter method
-    def __str__(self):
-        return json.dumps(self.json_file, indent=4)
-    
-    # getter methods for member data
-    def get_KDA(self):
-        return f"{self.kills}/{self.deaths}/{self.assists} - {self.kda}"
-    
-    def get_kills(self):
-        return self.kills
-    
-    def get_deaths(self):
-        return self.deaths
-    
-    def get_assists(self):
-        return self.assists
+from functions.performance import Player_Performance
 
 # Match_Game Class, which represents an single LoL game, which should host the performance of each player
 # based on an API call to the RIOT API, class will throw an exception will API call fails
@@ -56,7 +17,6 @@ class Match_Game:
         gameData = self.json_resp["info"]["participants"]
         for entry in gameData:
             user = Player_Performance(entry["puuid"], entry["riotIdGameName"] + "#" + entry["riotIdTagline"], entry, entry["individualPosition"])
-            user.load_stats()
             self.players.append(user)
     
     # __init__ constructor, which will throw an exception if Riot API fails        
