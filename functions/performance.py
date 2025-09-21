@@ -96,7 +96,7 @@ class Player_Performance(Performance):
         self.id = id
         self.user = user
         self.json_file = dump
-        self.role = role
+        self.role = self.get_role(role)
         self.load_stats()
         
     # load_stats method will parse self.json_file for information from Riot API
@@ -121,3 +121,10 @@ class Player_Performance(Performance):
     
     def get_assists(self):
         return self.assists
+    
+    def get_role(self, role):
+        if role.lower() != "invalid":
+            return role
+        else:
+            return "ARAM"
+
