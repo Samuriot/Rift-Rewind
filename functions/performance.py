@@ -98,6 +98,7 @@ class Player_Performance(Performance):
         self.json_file = dump
         self.role = self.get_role(role)
         self.load_stats()
+        self.champion = self.json_file["championId"]
         
     # load_stats method will parse self.json_file for information from Riot API
     # TODO: WIP currently, need to add more areas to parse
