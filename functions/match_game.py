@@ -4,9 +4,9 @@
 
 import requests
 import json
-
 # match_url global variable
 match_url  = "https://americas.api.riotgames.com/lol/match/v5/matches/"
+from functions.performance import Player_Performance
 
 # Player_Performance class which represents an individual's performance across a game of LoL
 # used by Riot_Acc and Match_Game classes via composition
@@ -64,7 +64,6 @@ class Match_Game:
         gameData = self.json_resp["info"]["participants"]
         for entry in gameData:
             user = Player_Performance(entry["puuid"], entry["riotIdGameName"] + "#" + entry["riotIdTagline"], entry, entry["individualPosition"])
-            user.load_stats()
             self.players.append(user)
     
     # __init__ constructor, which will throw an exception if Riot API fails        
