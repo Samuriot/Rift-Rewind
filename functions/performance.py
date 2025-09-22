@@ -16,7 +16,6 @@ class EconomyPerformance(Performance):
         self.goldSpent = self.json_file["goldSpent"]
         self.totalMinionsKilled = self.json_file["totalMinionsKilled"]
         self.neutralMinionsKilled = self.json_file["neutralMinionsKilled"]
-        self.totalMinionsKilled = self.json_file["totalMinionsKilled"]
         self.totalHeal = self.json_file["totalHeal"]
         self.totalUnitsHealed = self.json_file["totalUnitsHealed"]
         
