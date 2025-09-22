@@ -7,9 +7,9 @@ import json
 import os
 import functions.champion as champion
 import functions.match_game as m
-
+from functions.utils import most_frequent
 # dictionary with all champions as a global var
-master_champ_list = champion.create_champ_list()
+champion_directory = champion.ChampionDirectory()
 
 # Champ_Mastery Class which defines a player's specific experience with a champion
 # hosts all the data from an API call to the RiotAPI
@@ -18,7 +18,7 @@ class Champ_Mastery:
     # __init__ constructor
     def __init__(self, response: dict):
         self.json_info = response
-        self.champ_info = master_champ_list[str(response["championId"])]
+        self.champ_info = champion_directory.champions[str(response["championId"])]
     
     # print_info method to print the contents of Champ_Mastery
     def print_info(self):
@@ -101,7 +101,9 @@ class Riot_Acc:
         # create a singular json, which parses every single match in self.match_history
         # and compiles all the combined stats present
         compiled_stats = {}
+        compiled_stats["champion_tags"] = []
         for key, val in self.match_history.items():
+            compiled_stats["champion_tags"].append(champion_directory.get_champ_main_tag(str(val.champion)))
             for category, content in val.json_file.items():
                 if type(content) == int:
                     if category not in compiled_stats:
@@ -136,6 +138,14 @@ class Riot_Acc:
         compiled_stats["champLevel"] = (compiled_stats["champLevel"] / len(self.match_history))
         compiled_stats["champExperience"] = (compiled_stats["champExperience"] / len(self.match_history))
         compiled_stats["numGames"] = len(self.match_history)
+        print()
+
+        #compiles custom stats for all games
+        compiled_stats["mostPlayedRole"] = most_frequent(compiled_stats["individualPosition"])
+        compiled_stats["mostPlayedChampion"] = most_frequent(compiled_stats["championName"])
+        compiled_stats["mostPlayedChampionType"] = most_frequent(compiled_stats["champion_tags"])
+        
+
         
         for key, val in compiled_stats.items():
             print(f"{key}: {val}")
