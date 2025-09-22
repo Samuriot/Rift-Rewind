@@ -16,7 +16,7 @@ class Player_Performance:
         self.id = id
         self.user = user
         self.json_file = dump
-        self.role = role
+        self.role = self.get_role(role)
         
     # load_stats method will parse self.json_file for information from Riot API
     # TODO: WIP currently, need to add more areas to parse
@@ -46,6 +46,14 @@ class Player_Performance:
     
     def get_assists(self):
         return self.assists
+    
+    def get_role(self, role):
+        if role.lower() != "invalid":
+            return role
+        else:
+            return "ARAM"
+    
+
 
 # Match_Game Class, which represents an single LoL game, which should host the performance of each player
 # based on an API call to the RIOT API, class will throw an exception will API call fails
