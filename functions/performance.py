@@ -7,18 +7,18 @@ class Performance(ABC):
         pass
     
 class EconomyPerformance(Performance):
-    def __init__(self, json_file):
-        self.json_file = json_file
+    def __init__(self, match_data):
+        self.match_data = match_data
         self.load_stats()
     
     def load_stats(self):
-        self.goldEarned = self.json_file["goldEarned"]
-        self.goldSpent = self.json_file["goldSpent"]
-        self.totalMinionsKilled = self.json_file["totalMinionsKilled"]
-        self.neutralMinionsKilled = self.json_file["neutralMinionsKilled"]
-        self.totalHeal = self.json_file["totalHeal"]
-        self.totalUnitsHealed = self.json_file["totalUnitsHealed"]
-        self.goldPerMin = self.json_file["challenges"]["goldPerMinute"]
+        self.goldEarned = self.match_data["goldEarned"]
+        self.goldSpent = self.match_data["goldSpent"]
+        self.totalMinionsKilled = self.match_data["totalMinionsKilled"]
+        self.neutralMinionsKilled = self.match_data["neutralMinionsKilled"]
+        self.totalHeal = self.match_data["totalHeal"]
+        self.totalUnitsHealed = self.match_data["totalUnitsHealed"]
+        self.goldPerMin = self.match_data["challenges"]["goldPerMinute"]
         
     def get_gold(self):
         return {
@@ -39,33 +39,33 @@ class EconomyPerformance(Performance):
         }
 
 class CombatPerformance(Performance):
-    def __init__(self, json_file):
-        self.json_file = json_file
+    def __init__(self, match_data):
+        self.match_data = match_data
         self.load_stats()
     
     def load_stats(self):
-        self.kills = self.json_file["kills"]
-        self.deaths = self.json_file["deaths"]
-        self.assists = self.json_file["assists"]
+        self.kills = self.match_data["kills"]
+        self.deaths = self.match_data["deaths"]
+        self.assists = self.match_data["assists"]
         if self.deaths != 0:
             self.kda = round((self.kills + self.assists) / self.deaths, 3)
         else:
             self.kda = self.kills + self.assists
 
-        self.damageDealtToChampions = self.json_file["totalDamageDealtToChampions"]
-        self.damageDealtToObjectives = self.json_file["damageDealtToObjectives"]
-        self.damageDealtToTurrets = self.json_file["damageDealtToTurrets"]
-        self.totalDamageTaken = self.json_file["totalDamageTaken"]
-        self.physicalDamageTaken = self.json_file["physicalDamageTaken"]
-        self.magicDamageTaken = self.json_file["magicDamageTaken"]
-        self.trueDamageTaken = self.json_file["trueDamageTaken"]
-        self.wardsPlaced = self.json_file["wardsPlaced"]
-        self.wardsKilled = self.json_file["wardsKilled"]
-        self.visionWardsBoughtInGame = self.json_file["visionWardsBoughtInGame"]
-        self.damagerPerMinute = self.json_file["challenges"]["damagePerMinute"]
-        self.percentDamageTaken = self.json_file["challenges"]["damageTakenOnTeamPercentage"]
-        self.numEnemyChampCC = self.json_file["challenges"]["enemyChampionImmobilizations"]
-        self.killWithAllyCC = self.json_file["challenges"]["immobilizeAndKillWithAlly"]
+        self.damageDealtToChampions = self.match_data["totalDamageDealtToChampions"]
+        self.damageDealtToObjectives = self.match_data["damageDealtToObjectives"]
+        self.damageDealtToTurrets = self.match_data["damageDealtToTurrets"]
+        self.totalDamageTaken = self.match_data["totalDamageTaken"]
+        self.physicalDamageTaken = self.match_data["physicalDamageTaken"]
+        self.magicDamageTaken = self.match_data["magicDamageTaken"]
+        self.trueDamageTaken = self.match_data["trueDamageTaken"]
+        self.wardsPlaced = self.match_data["wardsPlaced"]
+        self.wardsKilled = self.match_data["wardsKilled"]
+        self.visionWardsBoughtInGame = self.match_data["visionWardsBoughtInGame"]
+        self.damagerPerMinute = self.match_data["challenges"]["damagePerMinute"]
+        self.percentDamageTaken = self.match_data["challenges"]["damageTakenOnTeamPercentage"]
+        self.numEnemyChampCC = self.match_data["challenges"]["enemyChampionImmobilizations"]
+        self.killWithAllyCC = self.match_data["challenges"]["immobilizeAndKillWithAlly"]
         
     def get_damage_dealt(self):
         return {
@@ -92,13 +92,13 @@ class CombatPerformance(Performance):
         return self.timeEnemySpentControlled
 
 class ObjectivePerformance(Performance):
-    def __init__(self, json_file):
-        self.json_file = json_file
+    def __init__(self, match_data):
+        self.match_data = match_data
         self.load_stats()
     
     def load_stats(self):
-        self.baronKills = self.json_file["baronKills"]
-        self.challengesDict = self.json_file["challenges"]
+        self.baronKills = self.match_data["baronKills"]
+        self.challengesDict = self.match_data["challenges"]
         # could potentially use this for something like: "You took advantage of Fire Dragon Soul By Picking Up x Scales"
         self.infernalScalePickups = self.challengesDict["InfernalScalePickup"]
         self.baronTakedowns = self.challengesDict["baronTakedowns"]
@@ -167,22 +167,22 @@ class Player_Performance(Performance):
     def __init__(self, id, user, dump, role):
         self.id = id
         self.user = user
-        self.json_file = dump
+        self.match_data = dump
         self.role = self.get_role(role)
-        self.champion = self.json_file["championId"]
+        self.champion = self.match_data["championId"]
         self.load_stats()
         pass
         
-    # load_stats method will parse self.json_file for information from Riot API
+    # load_stats method will parse self.match_data for information from Riot API
     # TODO: WIP currently, need to add more areas to parse
     def load_stats(self):
-        self.combat_performance = CombatPerformance(self.json_file)
-        self.economy_performance = EconomyPerformance(self.json_file)
-        self.objective_performance = ObjectivePerformance(self.json_file)
+        self.combat_performance = CombatPerformance(self.match_data)
+        self.economy_performance = EconomyPerformance(self.match_data)
+        self.objective_performance = ObjectivePerformance(self.match_data)
     
     # __str__ getter method
     def __str__(self):
-        return json.dumps(self.json_file, indent=4)
+        return json.dumps(self.match_data, indent=4)
     
     # getter methods for member data
     def get_KDA(self):
