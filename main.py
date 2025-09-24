@@ -1,4 +1,4 @@
-from functions import champion as c, get_acc as r, match_game as m
+from functions import champion as c, get_acc as r, match_game as m, riot_api_client as rac
 
 from dotenv import load_dotenv
 import os
@@ -10,7 +10,7 @@ api_key = os.getenv("RIOT_API")
 if __name__ == "__main__":
     user = input()
     tag = input()
-
-    temp = r.Riot_Acc(api_key, user, tag)
+    riot_client = rac.RiotClient(api_key, user, tag)
+    temp = r.Riot_Acc(riot_client)
     match_history = temp.parse_matches_ids()
     temp.compile_match_stats()

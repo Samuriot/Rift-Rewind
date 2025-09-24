@@ -2,8 +2,6 @@
 # defines the Champ_Mastery & Riot_Acc Class Definitions, which are integral for getting a player's stats
 
 from dotenv import load_dotenv
-import requests
-import json
 import os
 import functions.champion as champion
 import functions.match_game as m
@@ -33,17 +31,9 @@ class Champ_Mastery:
 class Riot_Acc:
     # __init__ constructor that forms a Riot_Acc object based on Riot API Call
     # will throw an error based on results of Riot API
-    def __init__(self, api_key, user, tag):
-        self.api_key = api_key
-        acc_url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{user}/{tag}"
-        headers = {
-            "X-Riot-Token": self.api_key
-        }
-        response = requests.get(acc_url, headers=headers)
-        if(response.status_code != 200):
-            raise Exception(f"API Error in Riot_Acc Constructor: {response.status_code}")
-        mp = json.loads(response.text) 
-        self.api_key = api_key
+    def __init__(self, riot_client):
+        self.riot_client = riot_client
+        mp = self.riot_client.get_account_data()
         self.puuid = mp["puuid"]
         self.gameName = mp["gameName"]
         self.tagLine = mp["tagLine"]
@@ -60,17 +50,8 @@ class Riot_Acc:
     # get_champ_mastery will perform an API call to get a user's complete champion mastery history
     # method will throw an exception if API call fails
     def get_champ_mastery(self) -> None:
-        # https://ddragon.leagueoflegends.com/cdn/6.24.1/data/en_US/champion.json
-        url = f"https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{self.puuid}"
-        headers = {
-            "X-Riot-Token": self.api_key
-        }
-        response = requests.get(url, headers=headers)
-        if(response.status_code != 200):
-            raise Exception(f"API Error in get_champ_mastery(): {response.status_code}")
-        mp = json.loads(response.text)
-        
-        for key in mp:
+        champ_mastery_data = self.riot_client.get_champ_mastery_data(self.puuid)
+        for key in champ_mastery_data:
             self.champList.append(Champ_Mastery(key))
     
         for champ in self.champList:
@@ -78,22 +59,14 @@ class Riot_Acc:
     
     # get_matches_ids method will perform an API call and create a list of the most recent 10 matches
     def get_matches_ids(self) -> list:
-        url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{self.puuid}/ids"
-        headers = {
-            "X-Riot-Token": self.api_key
-        }
-        response = requests.get(url, headers=headers)
-        if(response.status_code != 200):
-            raise Exception(f"API Error in get_matches(): {response.status_code}")
-            
-        return json.loads(response.text)
+        return self.riot_client.get_matches_data(self.puuid)
     
     # parse_matches_ids will parse information from get_matches_ids and create dictionaries with the information
     def parse_matches_ids(self) -> dict:
         self.match_history = {}
         match_ids = self.get_matches_ids()
         for match_id in match_ids:
-            game = m.Match_Game(self.api_key, match_id)
+            game = m.Match_Game(self.riot_client, match_id)
             self.match_history[match_id] = game.get_player_stats(self.puuid)
         return self.match_history
     
@@ -104,7 +77,7 @@ class Riot_Acc:
         compiled_stats["champion_tags"] = []
         for key, val in self.match_history.items():
             compiled_stats["champion_tags"].append(champion_directory.get_champ_main_tag(str(val.champion)))
-            for category, content in val.json_file.items():
+            for category, content in val.match_data.items():
                 if type(content) == int:
                     if category not in compiled_stats:
                         compiled_stats[category] = 0
