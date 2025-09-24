@@ -1,4 +1,4 @@
-from functions import champion as c, get_acc as r, match_game as m, riot_api_client as rac
+from api import champion as c, get_acc as r, match_game as m, riot_api_client as rac
 
 from dotenv import load_dotenv
 import os

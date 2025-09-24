@@ -5,7 +5,7 @@
 import json
 # match_url global variable
 match_url  = "https://americas.api.riotgames.com/lol/match/v5/matches/"
-from functions.performance import Player_Performance
+from api.performance import Player_Performance
 
 
 # Match_Game Class, which represents an single LoL game, which should host the performance of each player

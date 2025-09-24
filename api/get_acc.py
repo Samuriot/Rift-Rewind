@@ -3,9 +3,9 @@
 
 from dotenv import load_dotenv
 import os
-import functions.champion as champion
-import functions.match_game as m
-from functions.utils import most_frequent
+import api.champion as champion
+import api.match_game as m
+from api.utils import most_frequent
 # dictionary with all champions as a global var
 champion_directory = champion.ChampionDirectory()
 
