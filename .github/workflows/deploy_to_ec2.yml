@@ -6,7 +6,7 @@ on:
       - main  
 
 env:
-  DOCKER_IMAGE: yourdockerhubusername/myapp:latest  # needs one of our docker hub usernames 
+  DOCKER_IMAGE: samuriot/riftrewind:latest  # needs one of our docker hub usernames 
 
 jobs:
   build-and-deploy:
