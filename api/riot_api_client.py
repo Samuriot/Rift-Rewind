@@ -8,6 +8,8 @@ class MatchesRequestException(Exception):
     pass
 class ChampMasteryRequestException(Exception):
     pass
+class MatchTimelineRequestException(Exception):
+    pass
 class RiotClient:
     def __init__(self, api_key, user, tag):
         self.api_key = api_key
@@ -35,6 +37,14 @@ class RiotClient:
         if(response.status_code != 200):
             raise MatchesRequestException(f"API Error in get_matches_data(): {response.status_code}")
         return response.json()
+    
+    def get_match_timeline_data(self,match_id):
+        timeline_url = self.match_url + match_id + "/timeline"
+        response = requests.get(timeline_url, headers=self.api_headers)
+        if(response.status_code != 200):
+            raise MatchTimelineRequestException(f"API Error in get_match_timeline_data(): {response.status_code}")
+        return response.json()
+
     def get_champ_mastery_data(self,puuid):
         url = f"https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}"
         response = requests.get(url, headers=self.api_headers)
