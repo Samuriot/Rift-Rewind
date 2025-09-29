@@ -6,6 +6,8 @@ import json
 # match_url global variable
 match_url  = "https://americas.api.riotgames.com/lol/match/v5/matches/"
 from api.performance import Player_Performance
+from  api.matches.match_timeline import Timeline
+
 
 
 # Match_Game Class, which represents an single LoL game, which should host the performance of each player
@@ -25,7 +27,9 @@ class Match_Game:
         self.riot_client = riot_client
         self.match_id = match_id
         self.match_data = self.riot_client.get_match_data(self.match_id)
+        self.timeline = Timeline(riot_client, match_id)
         self.load_players()
+    
         
     # getter and printer methods for Match_Game class
     def get_player_stats(self, user: str) -> Player_Performance | None:
