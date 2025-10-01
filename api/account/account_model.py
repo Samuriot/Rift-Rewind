@@ -1,20 +1,13 @@
-class AccountV1Account:
+from pydantic import BaseModel
+
+
+class AccountV1Account(BaseModel):
     puuid: str
     gameName: str
     tagLine: str
 
-    def __init__(self, puuid: str, gameName: str, tagLine: str):
-        self.puuid = puuid
-        self.gameName = gameName
-        self.tagLine = tagLine
 
-
-class AccountV1ActiveShard:
+class AccountV1ActiveShard(BaseModel):
     puuid: str
     game: str
     activeShard: str
-
-    def __init__(self, puuid: str, game: str, activeShard: str):
-        self.puuid = puuid
-        self.game = game
-        self.activeShard = activeShard
