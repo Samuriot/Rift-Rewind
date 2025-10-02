@@ -1,8 +1,10 @@
-from api import champion as c, get_acc as r, riot_api_client as rac
+from api import champion as c, riot_api_client as rac
 
 from dotenv import load_dotenv
 import os
 import json
+
+from api.account import account as r
 
 load_dotenv()
 api_key = os.getenv("RIOT_API")

@@ -6,6 +6,7 @@ import os
 import api.champion as champion
 import api.matches.match_game as m
 from api.utils import most_frequent
+from api.account.account_model import AccountV1Account
 # dictionary with all champions as a global var
 champion_directory = champion.ChampionDirectory()
 
@@ -34,9 +35,10 @@ class Riot_Acc:
     def __init__(self, riot_client):
         self.riot_client = riot_client
         mp = self.riot_client.get_account_data()
-        self.puuid = mp["puuid"]
-        self.gameName = mp["gameName"]
-        self.tagLine = mp["tagLine"]
+        self.account = AccountV1Account.model_validate(mp)
+        self.puuid = mp.puuid
+        self.gameName = mp.gameName
+        self.tagLine = mp.tagLine
         self.champList = []
     
     # print_info will print out a user's puuid & Riot Tag
@@ -47,6 +49,9 @@ class Riot_Acc:
     def get_puuid(self) -> str:
         return self.puuid
     
+    def get_user(self) -> str:
+        return self.account
+
     # get_champ_mastery will perform an API call to get a user's complete champion mastery history
     # method will throw an exception if API call fails
     def get_champ_mastery(self) -> None:
